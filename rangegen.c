@@ -3,7 +3,7 @@
 #include <string.h>
 #define MALLOC(type,x) (type)malloc(x)
 
-static long ObtenirTailleFichier(FILE* f)
+static long GetFileSize(FILE* f)
 {
     if(fseek(f, 0, SEEK_END)) // If successful, the function returns zero.
         return 0;
@@ -48,6 +48,7 @@ void PushIntoLL(polyvalent value)
 #define GETBYTE(x, i) ((x >> 8*(i-1)) & 0xFF)
 void PrintLL(char* output)
 {
+
     FILE* f = fopen(output, "wb");
     if(f)
     {
@@ -111,7 +112,7 @@ char* parseFile(const char* fname)
 
 	if(f)
 	{
-		long fsize = fichier_traits.taille = ObtenirTailleFichier(f);
+		long fsize = fichier_traits.taille = GetFileSize(f);
 		char* fptr = fichier_traits.octets = MALLOC(char*, fsize);
 
 		if(fptr)
@@ -126,7 +127,7 @@ int main(int argc, char* argv[])
 {
 	int i;
 	if(argc < 3)
-		return 0;
+		printf("[+] %s [input file] [output file]\n", argv[0]);
 	if(parseFile(argv[1])) 
 	{
 		char* fptr = fichier_traits.octets;
@@ -144,9 +145,6 @@ int main(int argc, char* argv[])
 				memcpy(pch,fptr, delta);
 				pch[++delta] = 0;
 				PushIntoLL(StrToHost(pch));
-				//printf("%s\n", pch);
-				//printf("%u\n", StrToHost(pch));
-				//printf("%.*s\n", delta, fptr);
 				fptr += delta ;
 
 			}
